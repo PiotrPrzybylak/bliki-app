@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>bliki.io</title>
+</head>
+<body>
+<ul>
+    <li th:each="link:${links}"><a th:href="${link.href}" th:text="${link.text}" href="#"></a> <span th:text="${link.rating}"></span>/5</li>
+</ul>
+
+</body>
+</html>
