@@ -30,13 +30,19 @@ public class DemoController {
         return "v3";
     }
 
+    @GetMapping("/v4")
+    public String v4(Model model) {
+        model.addAttribute("links", getLinks());
+        return "v4";
+    }
+
     private Link[] getLinks() {
         return new Link[]{
-                new Link("https://kodologia.pl/blog/czym-jest-system-kontroli-wersji", "Założenie konta na GitHubie", 5),
-                new Link("https://docs.github.com/en/get-started/signing-up-for-github/signing-up-for-a-new-github-account", "Założenie konta na GitHubie", 2),
-                new Link("https://www.wikihow.com/Create-an-Account-on-GitHub", "Założenie konta na GitHubie", 4),
-                new Link("https://www.figma.com/", "Figma", 4),
-                new Link("https://balsamiq.com/", "Balsamiq Wireframes", 4),
+                new Link("https://kodologia.pl/blog/czym-jest-system-kontroli-wersji", "Założenie konta na GitHubie", 5, ""),
+                new Link("https://docs.github.com/en/get-started/signing-up-for-github/signing-up-for-a-new-github-account", "Założenie konta na GitHubie", 2, ""),
+                new Link("https://www.wikihow.com/Create-an-Account-on-GitHub", "Założenie konta na GitHubie", 4, ""),
+                new Link("https://www.figma.com/", "Figma", 4, "dużo da się zrobić za darmoszkę"),
+                new Link("https://balsamiq.com/", "Balsamiq Wireframes", 4, "trzeba bulić kaskę"),
         };
     }
 }

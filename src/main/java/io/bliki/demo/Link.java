@@ -1,4 +1,4 @@
 package io.bliki.demo;
 
-public record Link(String href, String text, int rating) {
+public record Link(String href, String text, int rating, String description) {
 }
