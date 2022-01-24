@@ -6,7 +6,7 @@
 </head>
 <body>
 <ul>
-    <li th:each="link:${links}"><a th:href="${link}" th:text="${link}" href="#"></a></li>
+    <li th:each="link:${links}"><a th:href="${link.href}" th:text="${link.href}" href="#"></a></li>
 </ul>
 
 </body>
