@@ -50,7 +50,7 @@ public class DemoController {
                 (rs, i) -> new Link(
                         rs.getString("href"),
                         rs.getString("text"),
-                        rs.getInt(5),
+                        rs.getInt("rating"),
                         rs.getString("description")));
         model.addAttribute("links", links);
         return "v4";
