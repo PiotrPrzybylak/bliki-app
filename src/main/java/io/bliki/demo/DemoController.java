@@ -1,11 +1,19 @@
 package io.bliki.demo;
 
+import lombok.AllArgsConstructor;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
+import java.util.List;
+
 @Controller
+@AllArgsConstructor
 public class DemoController {
+
+    private final JdbcTemplate jdbc;
 
     @GetMapping("/")
     public String hello() {
@@ -33,6 +41,13 @@ public class DemoController {
     @GetMapping("/v4")
     public String v4(Model model) {
         model.addAttribute("links", getLinks());
+        return "v4";
+    }
+
+    @GetMapping("/v5")
+    public String v5(Model model) {
+        List<Link> links = jdbc.query("select * from links", (rs, i) -> new Link(rs.getString("href"), rs.getString("text"), 5, ""));
+        model.addAttribute("links", links);
         return "v4";
     }
 
