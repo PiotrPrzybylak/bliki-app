@@ -46,7 +46,12 @@ public class DemoController {
 
     @GetMapping("/v5")
     public String v5(Model model) {
-        List<Link> links = jdbc.query("select * from links", (rs, i) -> new Link(rs.getString("href"), rs.getString("text"), 5, ""));
+        List<Link> links = jdbc.query("select * from links",
+                (rs, i) -> new Link(
+                        rs.getString("href"),
+                        rs.getString("text"),
+                        rs.getInt(5),
+                        rs.getString("description")));
         model.addAttribute("links", links);
         return "v4";
     }
