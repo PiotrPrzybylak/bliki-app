@@ -15,8 +15,9 @@ public class DemoController {
     private final JdbcTemplate jdbc;
 
     @GetMapping("/")
-    public String hello() {
-        return "hello";
+    public String home(Model model) {
+        model.addAttribute("blikis", getBliks());
+        return "blikis";
     }
 
     @GetMapping("/v1")
@@ -91,6 +92,14 @@ public class DemoController {
     private List<Category> getCategories() {
         return jdbc.query("select * from categories order by id",
                 (rs, i) -> new Category(
+                        rs.getString("id"),
+                        rs.getString("name"),
+                        rs.getString("description")));
+    }
+
+    private List<Bliki> getBliks() {
+        return jdbc.query("select * from blikis",
+                (rs, i) -> new Bliki(
                         rs.getString("id"),
                         rs.getString("name"),
                         rs.getString("description")));

@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>bliki.io</title>
+</head>
+<body>
+<ul>
+    <li th:each="bliki:${blikis}"><a th:href="'/bliki/'+${bliki.id}" th:text="${bliki.name}" href="#"></a> - <span
+            th:text="${bliki.description}"></span></li>
+</ul>
+
+</body>
+</html>
