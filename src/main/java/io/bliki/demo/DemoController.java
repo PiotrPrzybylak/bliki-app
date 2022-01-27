@@ -5,6 +5,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.*;
 
@@ -18,6 +19,12 @@ public class DemoController {
     public String home(Model model) {
         model.addAttribute("blikis", getBliks());
         return "blikis";
+    }
+
+    @GetMapping("/bliki/{id}")
+    public String bliki(@PathVariable String id, Model model) {
+        model.addAttribute("id", id);
+        return "bliki";
     }
 
     @GetMapping("/v1")
