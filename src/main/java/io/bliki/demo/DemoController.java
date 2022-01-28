@@ -2,6 +2,7 @@ package io.bliki.demo;
 
 import lombok.AllArgsConstructor;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,6 +15,10 @@ import java.util.*;
 public class DemoController {
 
     private final JdbcTemplate jdbc;
+    private final RowMapper<Bliki> blikiRowMapper = (rs, i) -> new Bliki(
+            rs.getString("id"),
+            rs.getString("name"),
+            rs.getString("description"));
 
     @GetMapping("/")
     public String home(Model model) {
@@ -23,48 +28,19 @@ public class DemoController {
 
     @GetMapping("/bliki/{id}")
     public String bliki(@PathVariable String id, Model model) {
-        model.addAttribute("id", id);
+        model.addAttribute("bliki", getBliki(id));
+        Map<Category, List<Link>> linksMapWithCategories = getLinksMapWithCategories(id);
+        model.addAttribute("categories", linksMapWithCategories);
         return "bliki";
     }
 
-    @GetMapping("/v1")
-    public String v1(Model model) {
-        model.addAttribute("links", getLinks());
-        return "v1";
-    }
-
-    @GetMapping("/v2")
-    public String v2(Model model) {
-        model.addAttribute("links", getLinks());
-        return "v2";
-    }
-
-    @GetMapping("/v3")
-    public String v3(Model model) {
-        model.addAttribute("links", getLinks());
-        return "v3";
-    }
-
-    @GetMapping("/v4")
-    public String v4(Model model) {
-        model.addAttribute("links", getLinks());
-        return "v4";
-    }
-
-    @GetMapping("/v5")
-    public String v5(Model model) {
-        model.addAttribute("links", getLinksFromDB());
-        return "v4";
-    }
-
-    @GetMapping("/v6")
-    public String v6(Model model) {
+    private Map<Category, List<Link>> getLinksMapWithCategories(String blikiId) {
         Map<String, List<Link>> linksMap = new HashMap<>();
-        List<Category> categories = getCategories();
+        List<Category> categories = getCategories(blikiId);
         for (Category category : categories) {
             linksMap.put(category.id(), new ArrayList<>());
         }
-        List<Link> links = getLinksFromDB();
+        List<Link> links = getLinks(blikiId);
         for (Link link : links) {
             linksMap.get(link.categoryId()).add(link);
         }
@@ -72,43 +48,40 @@ public class DemoController {
         for (Category category : categories) {
             linksMapWithCategories.put(category, linksMap.get(category.id()));
         }
-        model.addAttribute("categories", linksMapWithCategories);
-        return "v6";
+        return linksMapWithCategories;
     }
 
-    private List<Link> getLinksFromDB() {
-        return jdbc.query("select * from links",
+    private List<Link> getLinks(String blikiId) {
+        return jdbc.query("select * from links where bliki_id = ?",
                 (rs, i) -> new Link(
                         rs.getString("href"),
                         rs.getString("text"),
                         rs.getInt("rating"),
                         rs.getString("description"),
-                        rs.getString("category_id")));
+                        rs.getString("category_id")),
+                Long.parseLong(blikiId)
+        );
     }
 
-    private Link[] getLinks() {
-        return new Link[]{
-                new Link("https://kodologia.pl/blog/czym-jest-system-kontroli-wersji", "Założenie konta na GitHubie", 5, "", ""),
-                new Link("https://docs.github.com/en/get-started/signing-up-for-github/signing-up-for-a-new-github-account", "Założenie konta na GitHubie", 2, "", ""),
-                new Link("https://www.wikihow.com/Create-an-Account-on-GitHub", "Założenie konta na GitHubie", 4, "", ""),
-                new Link("https://www.figma.com/", "Figma", 4, "dużo da się zrobić za darmoszkę", ""),
-                new Link("https://balsamiq.com/", "Balsamiq Wireframes", 4, "trzeba bulić kaskę", ""),
-        };
-    }
-
-    private List<Category> getCategories() {
-        return jdbc.query("select * from categories order by id",
+    private List<Category> getCategories(String blikiId) {
+        return jdbc.query("select * from categories where bliki_id = ?",
                 (rs, i) -> new Category(
                         rs.getString("id"),
                         rs.getString("name"),
-                        rs.getString("description")));
+                        rs.getString("description")),
+                Long.parseLong(blikiId)
+        );
     }
 
     private List<Bliki> getBliks() {
         return jdbc.query("select * from blikis",
-                (rs, i) -> new Bliki(
-                        rs.getString("id"),
-                        rs.getString("name"),
-                        rs.getString("description")));
+                blikiRowMapper);
+    }
+
+    private Bliki getBliki(String id) {
+        return jdbc.queryForObject(
+                "select * from blikis where id = ?",
+                blikiRowMapper,
+                Long.parseLong(id));
     }
 }
