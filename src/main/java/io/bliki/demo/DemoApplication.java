@@ -24,7 +24,12 @@ public class DemoApplication {
             http
                     .authorizeRequests()
                     .antMatchers("/admin/*").authenticated()
-                    .anyRequest().permitAll();
+                    .anyRequest().permitAll()
+                    .and()
+                    .formLogin()
+                    .permitAll()
+                    .and()
+                    .logout();
         }
     }
 }
