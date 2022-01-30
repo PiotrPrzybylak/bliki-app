@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>bliki.io</title>
+    <script src="https://code.jquery.com/jquery-2.2.4.min.js"
+            integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery.cookie-consent/dist/jquery.cookie-consent.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $.cookieConsent();
+        });
+    </script>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-BBDKFSQG2N"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+
+        function gtag() {
+            dataLayer.push(arguments);
+        }
+
+        gtag('js', new Date());
+        gtag('config', 'G-BBDKFSQG2N');
+    </script>
+</head>
+<body>
+
+<h1 th:text="${bliki.name}"></h1>
+<div th:text="${bliki.description}"></div>
+
+<form method="post">
+    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+    <input type="hidden" name="bliki" th:value="${bliki.id}" />
+
+    <label for="category">Category</label>
+    <select name="category" id="category">
+        <option th:each="category:${categories}" th:value="${category.id}" th:text="${category.name}"></option>
+    </select>
+    <label for="href">Link</label>
+    <input name="href" id="href"/>
+    <button>Add</button>
+</form>
+</body>
+</html>

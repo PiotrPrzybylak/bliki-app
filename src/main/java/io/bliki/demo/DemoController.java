@@ -5,8 +5,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
 
@@ -33,6 +32,28 @@ public class DemoController {
         model.addAttribute("categories", linksMapWithCategories);
         return "bliki";
     }
+
+    @GetMapping("/admin/")
+    public String adminBlikis(Model model) {
+        model.addAttribute("blikis", getBliks());
+        return "admin_blikis";
+    }
+
+    @GetMapping("/admin/new_link")
+    public String newLinkForm(@RequestParam("bliki_id") String blikiId, Model model) {
+        model.addAttribute("bliki", getBliki(blikiId));
+        model.addAttribute("categories", getCategories(blikiId));
+        return "admin_new_link";
+    }
+
+    @PostMapping("/admin/new_link")
+    public String newLink(String href, @RequestParam("category") String categoryId, @RequestParam("bliki") String blikiId) {
+        jdbc.update("insert into links" +
+                " (href, text, rating, description, category_id, bliki_id)" +
+                "VALUES (?,?,?,?,?::integer,?::integer )", href, href, 0, "", categoryId, blikiId);
+        return "redirect:/admin/";
+    }
+
 
     private Map<Category, List<Link>> getLinksMapWithCategories(String blikiId) {
         Map<String, List<Link>> linksMap = new HashMap<>();
