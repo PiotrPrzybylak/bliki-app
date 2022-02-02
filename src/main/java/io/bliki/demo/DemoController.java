@@ -1,11 +1,15 @@
 package io.bliki.demo;
 
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.*;
 
@@ -34,7 +38,8 @@ public class DemoController {
     }
 
     @GetMapping("/admin/")
-    public String adminBlikis(Model model) {
+    public String adminBlikis(Model model, HttpServletRequest request) {
+        model.addAttribute("user", request.getRemoteUser());
         model.addAttribute("blikis", getBliks());
         return "admin_blikis";
     }
