@@ -1,5 +1,7 @@
 package io.bliki.demo;
 
+import io.bliki.user.User;
+import io.bliki.user.UserDAO;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -18,6 +20,7 @@ import java.util.*;
 public class DemoController {
 
     private final JdbcTemplate jdbc;
+    private final UserDAO userDAO;
     private final RowMapper<Bliki> blikiRowMapper = (rs, i) -> new Bliki(
             rs.getString("id"),
             rs.getString("name"),
@@ -52,10 +55,11 @@ public class DemoController {
     }
 
     @PostMapping("/admin/new_link")
-    public String newLink(String href, @RequestParam("category") String categoryId, @RequestParam("bliki") String blikiId) {
+    public String newLink(String href, @RequestParam("category") String categoryId, @RequestParam("bliki") String blikiId, HttpServletRequest request) {
+        User user = userDAO.byEmail(request.getRemoteUser());
         jdbc.update("insert into links" +
-                " (href, text, rating, description, category_id, bliki_id)" +
-                "VALUES (?,?,?,?,?::integer,?::integer )", href, href, 0, "", categoryId, blikiId);
+                " (href, text, rating, description, category_id, bliki_id, user_id)" +
+                "VALUES (?,?,?,?,?::integer,?::integer, ?::integer )", href, href, 0, "", categoryId, blikiId, user.id());
         return "redirect:/admin/";
     }
 
