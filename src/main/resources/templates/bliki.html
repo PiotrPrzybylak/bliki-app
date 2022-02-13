@@ -1,8 +1,13 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" dir="ltr">
 <head>
-    <meta charset="UTF-8">
-    <title>bliki.io</title>
+    <meta charset="UTF-8" />
+    <title th:text="'bliki.io - ' + ${bliki.name}">Bliki Preview</title>
+    <link rel="icon" sizes="192x192" href="gfx/favicons/touch-icon.png">
+    <link rel="apple-touch-icon" href="gfx/favicons/touch-icon.png">
+    <link rel="mask-icon" href="gfx/favicons/favicon-mask.svg" color="#fff">
+    <link rel="icon" href="gfx/favicons/favicon.ico">
+    <link rel="stylesheet" href="/style.css" />
     <script src="https://code.jquery.com/jquery-2.2.4.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/jquery.cookie-consent/dist/jquery.cookie-consent.min.js"></script>
     <script type="text/javascript">
@@ -20,15 +25,51 @@
 </head>
 <body>
 
-<h1 th:text="${bliki.name}"></h1>
-<div th:text="${bliki.description}"></div>
+<div id="container">
 
-<div th:each="category:${categories}">
-    <h2 th:text="${category.key.name}"></h2>
-    <ul>
-        <li th:each="link:${category.value}"><a th:href="${link.href}" th:text="${link.text}" href="#"></a> <span
-                th:text="${link.rating}"></span>/5 - <span th:text="${link.description}"></span></li>
-    </ul>
+    <div id="head">
+        <img src="/gfx/head-logo.png" id="head-logo" class="left">
+        <div class="section right">
+            <div id="head-msg">Welcome back, John!</div>
+            <div id="head-btns">
+                <a href="#" class="btn right">Register</a>
+                <a href="/admin/" class="btn right">Log in</a>
+            </div>
+        </div>
+    </div>
+
+    <div id="bliki">
+        <div id="bliki-head">
+            <h1 class="left" th:text="${bliki.name}">You did it John</h1>
+            <div id="bliki-head-author" class="left">by Col. Trautman</div>
+            <div id="bliki-head-back" class="right"><a href="/" class="btn">Back to blikis</a></div>
+            <p class="clear" th:text="${bliki.description}">A veteran Green Beret is forced by a cruel Sheriff and his deputies to flee into the mountains and wage an escalating one-man war against his pursuers. John J. Rambo is a former United States Special Forces soldier who fought in Vietnam and won the Congressional Medal of Honor, but his time in Vietnam still haunts him.</p>
+        </div>
+        <div th:each="category:${categories}">
+        <h2 th:text="${category.key.name}">Linki ważne</h2>
+        <a th:each="link:${category.value}" th:href="${link.href}" href="https://www.imdb.com/title/tt0083944" target="_blank" id="bliki-link">
+            <div id="bliki-link-left">
+                <h3 id="bliki-link-head" th:text="${link.text}">IMDB link</h3>
+                <div id="bliki-link-link" th:text="${link.href}" >https://www.imdb.com/title/tt0083944</div>
+                <div id="bliki-link-desc" th:text="${link.description}" >He did it for the country!</div>
+            </div>
+            <div id="bliki-link-right">
+                <div id="bliki-link-rating-user"><span class="big" th:text="${link.rating}">2</span><span class="sml"> / 5</div>
+                <div id="bliki-link-rating-author"><span class="big">?</span><span class="sml"> / 5</div>
+            </div>
+            <br class="clear">
+        </a>
+    </div>
+
+    <div id="footer">
+        <div class="section left">
+            <div class="sml">All rights reserved</div>
+        </div>
+        <div class="section right">
+            <div class="sml">bliki.io © 2022</div>
+        </div>
+    </div>
+
 </div>
 
 </body>
