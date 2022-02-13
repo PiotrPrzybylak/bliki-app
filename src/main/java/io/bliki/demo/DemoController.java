@@ -29,6 +29,8 @@ public class DemoController {
     @GetMapping("/")
     public String home(Model model) {
         model.addAttribute("blikis", getBliks());
+        model.addAttribute("categories", getCategories());
+
         return "blikis";
     }
 
@@ -105,6 +107,15 @@ public class DemoController {
                         rs.getString("name"),
                         rs.getString("description")),
                 Long.parseLong(blikiId)
+        );
+    }
+
+    private List<Category> getCategories() {
+        return jdbc.query("select * from categories",
+                (rs, i) -> new Category(
+                        rs.getString("id"),
+                        rs.getString("name"),
+                        rs.getString("description"))
         );
     }
 

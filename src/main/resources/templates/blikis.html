@@ -34,5 +34,13 @@ If you want one, please contact us at: hello.bliki@gmail.com
 
 <a href="/admin/">Login</a>
 
+<h2>Categories</h2>
+
+<ul>
+    <li th:each="category:${categories}"><a th:href="'/category/'+${category.id}" th:text="${category.name}" href="#"></a> - <span
+            th:text="${category.description}"></span></li>
+</ul>
+
+
 </body>
 </html>
