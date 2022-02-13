@@ -55,11 +55,16 @@ public class DemoController {
     }
 
     @PostMapping("/admin/new_link")
-    public String newLink(String href, @RequestParam("category") String categoryId, @RequestParam("bliki") String blikiId, HttpServletRequest request) {
+    public String newLink(
+            String href,
+            @RequestParam("category") String categoryId,
+            @RequestParam("bliki") String blikiId,
+            String description,
+            HttpServletRequest request) {
         User user = userDAO.byEmail(request.getRemoteUser());
         jdbc.update("insert into links" +
                 " (href, text, rating, description, category_id, bliki_id, user_id)" +
-                "VALUES (?,?,?,?,?::integer,?::integer, ?::integer )", href, href, 0, "", categoryId, blikiId, user.id());
+                "VALUES (?,?,?,?,?::integer,?::integer, ?::integer )", href, href, 0, description, categoryId, blikiId, user.id());
         return "redirect:/admin/";
     }
 
