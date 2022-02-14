@@ -62,11 +62,12 @@ public class DemoController {
             @RequestParam("category") String categoryId,
             @RequestParam("bliki") String blikiId,
             String description,
+            Long rate,
             HttpServletRequest request) {
         User user = userDAO.byEmail(request.getRemoteUser());
         jdbc.update("insert into links" +
                 " (href, text, rating, description, category_id, bliki_id, user_id)" +
-                "VALUES (?,?,?,?,?::integer,?::integer, ?::integer )", href, href, 0, description, categoryId, blikiId, user.id());
+                "VALUES (?,?,?,?,?::integer,?::integer, ?::integer )", href, href, rate, description, categoryId, blikiId, user.id());
         return "redirect:/admin/";
     }
 
