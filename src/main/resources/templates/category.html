@@ -2,7 +2,7 @@
 <html lang="en" dir="ltr">
 <head>
     <meta charset="UTF-8" />
-    <title th:text="'bliki.io - ' + ${bliki.name}">Bliki Preview</title>
+    <title th:text="'bliki.io - Category: ' + ${category.name}">Bliki Preview</title>
     <link rel="icon" sizes="192x192" href="gfx/favicons/touch-icon.png">
     <link rel="apple-touch-icon" href="gfx/favicons/touch-icon.png">
     <link rel="mask-icon" href="gfx/favicons/favicon-mask.svg" color="#fff">
@@ -40,14 +40,12 @@
 
     <div id="bliki">
         <div id="bliki-head">
-            <h1 class="left" th:text="${bliki.name}">You did it John</h1>
+            <h1 class="left" th:text="${category.name}">You did it John</h1>
             <div id="bliki-head-author" class="left">by Col. Trautman</div>
             <div id="bliki-head-back" class="right"><a href="/" class="btn">Back to blikis</a></div>
-            <p class="clear" th:text="${bliki.description}">A veteran Green Beret is forced by a cruel Sheriff and his deputies to flee into the mountains and wage an escalating one-man war against his pursuers. John J. Rambo is a former United States Special Forces soldier who fought in Vietnam and won the Congressional Medal of Honor, but his time in Vietnam still haunts him.</p>
+            <p class="clear" th:text="${category.description}">A veteran Green Beret is forced by a cruel Sheriff and his deputies to flee into the mountains and wage an escalating one-man war against his pursuers. John J. Rambo is a former United States Special Forces soldier who fought in Vietnam and won the Congressional Medal of Honor, but his time in Vietnam still haunts him.</p>
         </div>
-        <div th:each="category:${categories}">
-        <h2 th:text="${category.key.name}">Linki ważne</h2>
-        <a th:each="link:${category.value}" th:href="${link.href}" href="https://www.imdb.com/title/tt0083944" target="_blank" id="bliki-link">
+        <a th:each="link:${links}" th:href="${link.href}" href="https://www.imdb.com/title/tt0083944" target="_blank" id="bliki-link">
             <div id="bliki-link-left">
                 <h3 id="bliki-link-head" th:text="${link.text}">IMDB link</h3>
                 <div id="bliki-link-link" th:text="${link.href}" >https://www.imdb.com/title/tt0083944</div>
@@ -59,7 +57,6 @@
             </div>
             <br class="clear">
         </a>
-        </div>
     </div>
 
     <div id="footer">
@@ -71,7 +68,7 @@
         </div>
     </div>
 
-</div>
 
+</div>
 </body>
 </html>

@@ -21,10 +21,25 @@ public class DemoController {
 
     private final JdbcTemplate jdbc;
     private final UserDAO userDAO;
-    private final RowMapper<Bliki> blikiRowMapper = (rs, i) -> new Bliki(
-            rs.getString("id"),
-            rs.getString("name"),
-            rs.getString("description"));
+    private final RowMapper<Bliki> blikiRowMapper = (rs, i) ->
+            new Bliki(
+                    rs.getString("id"),
+                    rs.getString("name"),
+                    rs.getString("description"));
+
+    private final RowMapper<Category> categoryRowMapper = (rs, i) ->
+            new Category(
+                    rs.getString("id"),
+                    rs.getString("name"),
+                    rs.getString("description"));
+
+    private final RowMapper<Link> linkRowMapper = (rs, i) ->
+            new Link(
+                    rs.getString("href"),
+                    rs.getString("text"),
+                    rs.getInt("rating"),
+                    rs.getString("description"),
+                    rs.getString("category_id"));
 
     @GetMapping("/")
     public String home(Model model) {
@@ -40,6 +55,14 @@ public class DemoController {
         Map<Category, List<Link>> linksMapWithCategories = getLinksMapWithCategories(id);
         model.addAttribute("categories", linksMapWithCategories);
         return "bliki";
+    }
+
+    @GetMapping("/category/{id}")
+    public String category(@PathVariable String id, Model model) {
+        model.addAttribute("category", getCategory(id));
+        List<Link> links = getLinksByCategoryId(id);
+        model.addAttribute("links", links);
+        return "category";
     }
 
     @GetMapping("/admin/")
@@ -93,28 +116,31 @@ public class DemoController {
 
     private List<Link> getLinks(String blikiId) {
         return jdbc.query("select * from links where bliki_id = ?",
-                (rs, i) -> new Link(
-                        rs.getString("href"),
-                        rs.getString("text"),
-                        rs.getInt("rating"),
-                        rs.getString("description"),
-                        rs.getString("category_id")),
+                linkRowMapper,
                 Long.parseLong(blikiId)
         );
     }
 
-    private List<Category> getCategories() {
-        return jdbc.query("select * from categories",
-                (rs, i) -> new Category(
-                        rs.getString("id"),
-                        rs.getString("name"),
-                        rs.getString("description"))
+    private List<Link> getLinksByCategoryId(String categoryId) {
+        return jdbc.query("select * from links where category_id = ?",
+                linkRowMapper,
+                Long.parseLong(categoryId)
         );
     }
 
+    private List<Category> getCategories() {
+        return jdbc.query("select * from categories", categoryRowMapper);
+    }
+
+    private Category getCategory(String id) {
+        return jdbc.queryForObject(
+                "select * from categories where id = ?",
+                categoryRowMapper,
+                Long.parseLong(id));
+    }
+
     private List<Bliki> getBliks() {
-        return jdbc.query("select * from blikis",
-                blikiRowMapper);
+        return jdbc.query("select * from blikis", blikiRowMapper);
     }
 
     private Bliki getBliki(String id) {
