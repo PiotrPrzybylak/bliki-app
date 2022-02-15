@@ -52,7 +52,7 @@ public class DemoController {
     @GetMapping("/admin/new_link")
     public String newLinkForm(@RequestParam("bliki_id") String blikiId, Model model) {
         model.addAttribute("bliki", getBliki(blikiId));
-        model.addAttribute("categories", getCategories(blikiId));
+        model.addAttribute("categories", getCategories());
         return "admin_new_link";
     }
 
@@ -74,17 +74,19 @@ public class DemoController {
 
     private Map<Category, List<Link>> getLinksMapWithCategories(String blikiId) {
         Map<String, List<Link>> linksMap = new HashMap<>();
-        List<Category> categories = getCategories(blikiId);
+        List<Category> categories = getCategories();
         for (Category category : categories) {
             linksMap.put(category.id(), new ArrayList<>());
         }
-        List<Link> links = getLinks(blikiId);
-        for (Link link : links) {
+        for (Link link : getLinks(blikiId)) {
             linksMap.get(link.categoryId()).add(link);
         }
         Map<Category, List<Link>> linksMapWithCategories = new LinkedHashMap<>();
         for (Category category : categories) {
-            linksMapWithCategories.put(category, linksMap.get(category.id()));
+            List<Link> links = linksMap.get(category.id());
+            if (!links.isEmpty()) {
+                linksMapWithCategories.put(category, links);
+            }
         }
         return linksMapWithCategories;
     }
