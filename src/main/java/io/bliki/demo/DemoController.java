@@ -103,16 +103,6 @@ public class DemoController {
         );
     }
 
-    private List<Category> getCategories(String blikiId) {
-        return jdbc.query("select * from categories where bliki_id = ?",
-                (rs, i) -> new Category(
-                        rs.getString("id"),
-                        rs.getString("name"),
-                        rs.getString("description")),
-                Long.parseLong(blikiId)
-        );
-    }
-
     private List<Category> getCategories() {
         return jdbc.query("select * from categories",
                 (rs, i) -> new Category(
