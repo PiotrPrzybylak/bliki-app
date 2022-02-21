@@ -3,7 +3,8 @@ create table blikis
     id          serial
         primary key,
     name        text,
-    description text
+    description text,
+    listed      boolean default true not null
 );
 
 create table categories
