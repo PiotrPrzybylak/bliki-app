@@ -43,7 +43,7 @@ public class DemoController {
 
     @GetMapping("/")
     public String home(Model model) {
-        model.addAttribute("blikis", getBliks());
+        model.addAttribute("blikis", getListedBliks());
         model.addAttribute("categories", getCategories());
 
         return "blikis";
@@ -141,6 +141,10 @@ public class DemoController {
 
     private List<Bliki> getBliks() {
         return jdbc.query("select * from blikis", blikiRowMapper);
+    }
+
+    private List<Bliki> getListedBliks() {
+        return jdbc.query("select * from blikis where listed = true", blikiRowMapper);
     }
 
     private Bliki getBliki(String id) {

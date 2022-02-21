@@ -47,7 +47,7 @@
         </div>
         <div>
         <h2>Available blikis</h2>
-        <a th:each="bliki:${blikis}" th:href="'/bliki/'+${bliki.id}" href="https://www.imdb.com/title/tt0083944" target="_blank" id="bliki-link">
+        <a th:each="bliki:${blikis}" th:href="'/bliki/'+${bliki.id}" href="https://www.imdb.com/title/tt0083944" id="bliki-link">
             <div id="bliki-link-left">
                 <h3 id="bliki-link-head" th:text="${bliki.name}">IMDB link</h3>
                 <div id="bliki-link-desc" th:text="${bliki.description}" >He did it for the country!</div>
@@ -61,7 +61,7 @@
         </div>
         <div>
             <h2>Categories</h2>
-            <a th:each="category:${categories}" th:href="'/category/'+${category.id}" href="https://www.imdb.com/title/tt0083944" target="_blank" id="bliki-link">
+            <a th:each="category:${categories}" th:href="'/category/'+${category.id}" href="https://www.imdb.com/title/tt0083944" id="bliki-link">
                 <div id="bliki-link-left">
                     <h3 id="bliki-link-head" th:text="${category.name}">IMDB link</h3>
 <!--                    <div id="bliki-link-link" th:text="${link.href}" >https://www.imdb.com/title/tt0083944</div>-->
