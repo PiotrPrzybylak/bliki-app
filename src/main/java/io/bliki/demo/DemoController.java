@@ -43,7 +43,7 @@ public class DemoController {
 
     @GetMapping("/")
     public String home(Model model) {
-        model.addAttribute("blikis", getListedBliks());
+        model.addAttribute("blikis", getListedBlikis());
         model.addAttribute("categories", getCategories());
 
         return "blikis";
@@ -68,7 +68,7 @@ public class DemoController {
     @GetMapping("/admin/")
     public String adminBlikis(Model model, HttpServletRequest request) {
         model.addAttribute("user", request.getRemoteUser());
-        model.addAttribute("blikis", getBliks());
+        model.addAttribute("blikis", getBlikis());
         return "admin_blikis";
     }
 
@@ -139,11 +139,11 @@ public class DemoController {
                 Long.parseLong(id));
     }
 
-    private List<Bliki> getBliks() {
+    private List<Bliki> getBlikis() {
         return jdbc.query("select * from blikis", blikiRowMapper);
     }
 
-    private List<Bliki> getListedBliks() {
+    private List<Bliki> getListedBlikis() {
         return jdbc.query("select * from blikis where listed = true", blikiRowMapper);
     }
 
