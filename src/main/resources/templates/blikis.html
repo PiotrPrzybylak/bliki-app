@@ -1,8 +1,13 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" dir="ltr">
 <head>
-    <meta charset="UTF-8">
-    <title>bliki.io</title>
+    <meta charset="UTF-8" />
+    <title>Bliki</title>
+    <link rel="icon" sizes="192x192" href="gfx/favicons/touch-icon.png">
+    <link rel="apple-touch-icon" href="gfx/favicons/touch-icon.png">
+    <link rel="mask-icon" href="gfx/favicons/favicon-mask.svg" color="#fff">
+    <link rel="icon" href="gfx/favicons/favicon.ico">
+    <link rel="stylesheet" href="/style.css" />
     <script src="https://code.jquery.com/jquery-2.2.4.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/jquery.cookie-consent/dist/jquery.cookie-consent.min.js"></script>
     <script type="text/javascript">
@@ -15,32 +20,72 @@
         window.dataLayer = window.dataLayer || [];
         function gtag(){dataLayer.push(arguments);}
         gtag('js', new Date());
-
         gtag('config', 'G-BBDKFSQG2N');
     </script>
 </head>
 <body>
 
-<h1>Welcome to bliki.io!</h1>
-If you want to create your own bliki, you need to receive invitation.
-If you want one, please contact us at: hello.bliki@gmail.com
+<div id="container">
 
-<h2>Available blikis</h2>
+    <div id="head">
+        <img src="/gfx/head-logo.png" id="head-logo" class="left">
+        <div class="section right">
+<!--            <div id="head-msg">Welcome back, John!</div>-->
+            <div id="head-btns">
+<!--                <a href="#" class="btn right">Register</a>-->
+                <a href="/admin/" class="btn right">Log in</a>
+            </div>
+        </div>
+    </div>
 
-<ul>
-    <li th:each="bliki:${blikis}"><a th:href="'/bliki/'+${bliki.id}" th:text="${bliki.name}" href="#"></a> - <span
-            th:text="${bliki.description}"></span></li>
-</ul>
+    <div id="bliki">
+        <div id="bliki-head">
+            <h1 class="left">Welcome to bliki.io!</h1>
+<!--            <div id="bliki-head-author" class="left">by Col. Trautman</div>-->
+<!--            <div id="bliki-head-back" class="right"><a href="/" class="btn">Back to blikis</a></div>-->
+            <p class="clear">If you want to create your own bliki, you need to receive invitation. If you want one, please contact us at: hello.bliki@gmail.com</p>
+        </div>
+        <div>
+        <h2>Available blikis</h2>
+        <a th:each="bliki:${blikis}" th:href="'/bliki/'+${bliki.id}" href="https://www.imdb.com/title/tt0083944" target="_blank" id="bliki-link">
+            <div id="bliki-link-left">
+                <h3 id="bliki-link-head" th:text="${bliki.name}">IMDB link</h3>
+                <div id="bliki-link-desc" th:text="${bliki.description}" >He did it for the country!</div>
+            </div>
+<!--            <div id="bliki-link-right">-->
+<!--                <div id="bliki-link-rating-user"><span class="big" th:text="${link.rating}">2</span><span class="sml"> / 5</div>-->
+<!--                <div id="bliki-link-rating-author"><span class="big">?</span><span class="sml"> / 5</div>-->
+<!--            </div>-->
+            <br class="clear">
+        </a>
+        </div>
+        <div>
+            <h2>Categories</h2>
+            <a th:each="category:${categories}" th:href="'/category/'+${category.id}" href="https://www.imdb.com/title/tt0083944" target="_blank" id="bliki-link">
+                <div id="bliki-link-left">
+                    <h3 id="bliki-link-head" th:text="${category.name}">IMDB link</h3>
+<!--                    <div id="bliki-link-link" th:text="${link.href}" >https://www.imdb.com/title/tt0083944</div>-->
+                    <div id="bliki-link-desc" th:text="${category.description}" >He did it for the country!</div>
+                </div>
+<!--                <div id="bliki-link-right">-->
+<!--                    <div id="bliki-link-rating-user"><span class="big" th:text="${link.rating}">2</span><span class="sml"> / 5</div>-->
+<!--                    <div id="bliki-link-rating-author"><span class="big">?</span><span class="sml"> / 5</div>-->
+<!--                </div>-->
+                <br class="clear">
+            </a>
+        </div>
+    </div>
 
-<a href="/admin/">Login</a>
+    <div id="footer">
+        <div class="section left">
+            <div class="sml">All rights reserved</div>
+        </div>
+        <div class="section right">
+            <div class="sml">bliki.io © 2022</div>
+        </div>
+    </div>
 
-<h2>Categories</h2>
-
-<ul>
-    <li th:each="category:${categories}"><a th:href="'/category/'+${category.id}" th:text="${category.name}" href="#"></a> - <span
-            th:text="${category.description}"></span></li>
-</ul>
-
+</div>
 
 </body>
 </html>
