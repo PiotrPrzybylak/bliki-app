@@ -39,7 +39,8 @@ public class DemoController {
                     rs.getString("text"),
                     rs.getInt("rating"),
                     rs.getString("description"),
-                    rs.getString("category_id"));
+                    rs.getString("category_id"),
+                    rs.getString("tags"));
 
     @GetMapping("/")
     public String home(Model model) {
