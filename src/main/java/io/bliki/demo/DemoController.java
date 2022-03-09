@@ -33,6 +33,12 @@ public class DemoController {
                     rs.getString("name"),
                     rs.getString("description"));
 
+    private final Map<Integer, Language> langs = Map.of(
+            1, new Language("", "English", "EN", "/gfx/lang_icons/usa.png"),
+            2, new Language("", "Polski", "PL", "/gfx/lang_icons/pol.png"),
+            3, new Language("", "Español", "ES", "/gfx/lang_icons/esp.png")
+    );
+
     private final RowMapper<Link> linkRowMapper = (rs, i) ->
             new Link(
                     rs.getString("href"),
@@ -40,7 +46,10 @@ public class DemoController {
                     rs.getInt("rating"),
                     rs.getString("description"),
                     rs.getString("category_id"),
-                    rs.getString("tags"));
+                    rs.getString("tags"),
+                    langs.getOrDefault(rs.getInt("language_id"), langs.get(1))
+                    );
+
 
     @GetMapping("/")
     public String home(Model model) {
@@ -155,4 +164,6 @@ public class DemoController {
                 blikiRowMapper,
                 Long.parseLong(id));
     }
+
+
 }

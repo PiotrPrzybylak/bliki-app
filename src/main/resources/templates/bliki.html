@@ -52,8 +52,8 @@
                 <h3 id="bliki-link-head" th:text="${link.text}">IMDB link</h3>
                 <div id="bliki-link-link" th:text="${link.href}" >https://www.imdb.com/title/tt0083944</div>
                 <div id="bliki-link-desc" th:text="${link.description}" >He did it for the country!</div>
-                Tags: <span th:each="tag:${link.tagsArray}" th:text="${tag}"></span>
-                <span>Language: <span></span></span>
+                <div>Tags: <span th:each="tag:${link.tagsArray}" th:text="${tag}"></span></div>
+                <div>Language: <span th:text="${link.language.name}"></span> <img th:src="${link.language.iconURL}" /></div>
             </div>
             <div id="bliki-link-right">
                 <div id="bliki-link-rating-user"><span class="big" th:text="${link.rating}">2</span><span class="sml"> / 5</div>
