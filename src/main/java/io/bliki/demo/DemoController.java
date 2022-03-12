@@ -41,6 +41,7 @@ public class DemoController {
 
     private final RowMapper<Link> linkRowMapper = (rs, i) ->
             new Link(
+                    rs.getString("id"),
                     rs.getString("href"),
                     rs.getString("text"),
                     rs.getInt("rating"),
@@ -115,6 +116,18 @@ public class DemoController {
         jdbc.update("insert into categories" +
                 " (name, description, user_id)" +
                 "VALUES (?,?,?::integer )", name, description, user.id());
+        return "redirect:/admin/";
+    }
+
+    @PostMapping("/admin/rate_link")
+    public String rateLink(
+            @RequestParam("link_id") Integer linkId,
+            Integer rating,
+            HttpServletRequest request) {
+        User user = userDAO.byEmail(request.getRemoteUser());
+        jdbc.update("insert into ratings" +
+                " (link_id, rating, user_id)" +
+                "VALUES (?,?,?::integer )",linkId, rating, user.id());
         return "redirect:/admin/";
     }
 
