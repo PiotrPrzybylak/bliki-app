@@ -28,6 +28,7 @@
 <h1 th:text="${bliki.name}"></h1>
 <div th:text="${bliki.description}"></div>
 
+<h2>Add new link</h2>
 <form method="post">
     <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
     <input type="hidden" name="bliki" th:value="${bliki.id}" />
@@ -47,10 +48,20 @@
     <button>Add</button>
 </form>
 
+
+<h2>Add new category</h2>
+<form method="post" action="/admin/categories">
+    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+    name:<input name="name" />
+    description:<textarea name="description" ></textarea>
+    <button>Add Category</button>
+</form>
+
+<h2>Links in this bliki:</h2>
+
 <ul>
     <li th:each="link:${links}" th:text="${link.href}"></li>
 </ul>
-
 
 </body>
 </html>

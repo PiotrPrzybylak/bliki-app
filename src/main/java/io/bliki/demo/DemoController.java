@@ -106,6 +106,18 @@ public class DemoController {
         return "redirect:/admin/";
     }
 
+    @PostMapping("/admin/categories")
+    public String newCategory(
+            String name,
+            String description,
+            HttpServletRequest request) {
+        User user = userDAO.byEmail(request.getRemoteUser());
+        jdbc.update("insert into categories" +
+                " (name, description, user_id)" +
+                "VALUES (?,?,?::integer )", name, description, user.id());
+        return "redirect:/admin/";
+    }
+
 
     private Map<Category, List<Link>> getLinksMapWithCategories(String blikiId) {
         Map<String, List<Link>> linksMap = new HashMap<>();
