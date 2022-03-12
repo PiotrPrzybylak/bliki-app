@@ -45,6 +45,7 @@ public class DemoController {
                     rs.getString("href"),
                     rs.getString("text"),
                     rs.getInt("rating"),
+                    rs.getBigDecimal("community_rating"),
                     rs.getString("description"),
                     rs.getString("category_id"),
                     rs.getString("tags"),
@@ -152,14 +153,14 @@ public class DemoController {
     }
 
     private List<Link> getLinks(String blikiId) {
-        return jdbc.query("select * from links where bliki_id = ?",
+        return jdbc.query("select l.id, href, text, l.rating, description, category_id, tags, language_id, AVG(r.rating) as community_rating from links l left join ratings r on l.id = r.link_id where bliki_id = ? group by l.id",
                 linkRowMapper,
                 Long.parseLong(blikiId)
         );
     }
 
     private List<Link> getLinksByCategoryId(String categoryId) {
-        return jdbc.query("select * from links where category_id = ?",
+        return jdbc.query("select l.id, href, text, l.rating, description, category_id, tags, language_id, AVG(r.rating) as community_rating from links l left join ratings r on l.id = r.link_id where category_id = ? group by l.id",
                 linkRowMapper,
                 Long.parseLong(categoryId)
         );

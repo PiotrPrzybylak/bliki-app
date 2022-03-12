@@ -57,7 +57,7 @@
             </div>
             <div id="bliki-link-right">
                 <div id="bliki-link-rating-user"><span class="big" th:text="${link.rating}">2</span><span class="sml"> / 5</div>
-                <div id="bliki-link-rating-author"><span class="big">?</span><span class="sml"> / 5</div>
+                <div id="bliki-link-rating-author"><span class="big" th:text="${link.communityRatingAsString}">?</span><span class="sml"> / 5</div>
             </div>
             <br class="clear">
         </a>
