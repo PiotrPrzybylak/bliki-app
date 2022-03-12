@@ -100,12 +100,12 @@ body {
 }
 
 #bliki-link-left {
-  width: calc(95% - 150px);
+  width: calc(95% - 175px);
   float: left;
 }
 
 #bliki-link-right {
-  width: 150px;
+  width: 175px;
   float: right;
 }
 
