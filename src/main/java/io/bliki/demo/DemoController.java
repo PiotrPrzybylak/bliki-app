@@ -86,6 +86,7 @@ public class DemoController {
     public String newLinkForm(@RequestParam("bliki_id") String blikiId, Model model) {
         model.addAttribute("bliki", getBliki(blikiId));
         model.addAttribute("categories", getCategories());
+        model.addAttribute("links", getLinks(blikiId));
         return "admin_new_link";
     }
 
