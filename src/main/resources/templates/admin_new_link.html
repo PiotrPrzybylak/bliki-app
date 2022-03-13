@@ -84,6 +84,11 @@
                     <div id="bliki-link-desc" th:text="${link.description}" >He did it for the country!</div>
                     <div>Tags: <span th:each="tag:${link.tagsArray}" th:text="${tag}"></span></div>
                     <div>Language: <span th:text="${link.language.name}"></span> <img th:src="${link.language.iconURL}" /></div>
+                    <form action="/admin/delete_link" method="post">
+                        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+                        <input type="hidden" name="link_id" th:value="${link.id}">
+                        <button>Delete</button>
+                    </form>
                 </div>
                 <div id="bliki-link-right">
                     <form action="/admin/rate_link" method="post" style="display: inline">

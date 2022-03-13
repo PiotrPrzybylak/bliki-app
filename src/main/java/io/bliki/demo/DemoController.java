@@ -112,6 +112,14 @@ public class DemoController {
         return "redirect:/admin/";
     }
 
+    @PostMapping("/admin/delete_link")
+    public String newLink(
+            @RequestParam("bliki") String blikiId,
+            @RequestParam("link_id") Integer linkId) {
+        jdbc.update("delete from links where id = ?", linkId);
+        return "redirect:/admin/new_link?blikiId=" + blikiId;
+    }
+
     @PostMapping("/admin/categories")
     public String newCategory(
             String name,
