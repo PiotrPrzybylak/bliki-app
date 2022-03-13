@@ -85,10 +85,14 @@ public class DemoController {
     }
 
     @GetMapping("/admin/new_link")
-    public String newLinkForm(@RequestParam("bliki_id") String blikiId, Model model) {
+    public String newLinkForm(@RequestParam("bliki_id") String blikiId, Model model, HttpServletRequest request) {
+        User user = userDAO.byEmail(request.getRemoteUser());
+
+        model.addAttribute("user", user);
         model.addAttribute("bliki", getBliki(blikiId));
         model.addAttribute("categories", getCategories());
         model.addAttribute("links", getLinks(blikiId));
+        model.addAttribute("categoriesMap", getLinksMapWithCategories(blikiId));
         return "admin_new_link";
     }
 
