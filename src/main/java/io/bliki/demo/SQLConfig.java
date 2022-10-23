@@ -5,8 +5,10 @@ import org.springframework.jdbc.core.RowMapper;
 
 import java.util.*;
 
-public class SQLController {
-    private final JdbcTemplate jdbc;
+public class SQLConfig {
+    private final JdbcTemplate jdbcTemplate;
+
+//    private JdbcTemplate jdbc;
 
     private final RowMapper<Bliki> blikiRowMapper = (rs, i) ->
             new Bliki(
@@ -37,45 +39,63 @@ public class SQLController {
                     langs.getOrDefault(rs.getInt("language_id"), langs.get(1))
             );
 
-    public SQLController(JdbcTemplate jdbc) {
-        this.jdbc = jdbc;
+    public SQLConfig(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
     }
 
-    private List<Link> getLinks(String blikiId) {
-        return jdbc.query("select * from links where bliki_id = ?",
+    public Map<Category, List<Link>> getLinksMapWithCategories(String blikiId) {
+        Map<String, List<Link>> linksMap = new HashMap<>();
+        List<Category> categories = getCategories();
+        for (Category category : categories) {
+            linksMap.put(category.id(), new ArrayList<>());
+        }
+        for (Link link : getLinks(blikiId)) {
+            linksMap.get(link.categoryId()).add(link);
+        }
+        Map<Category, List<Link>> linksMapWithCategories = new LinkedHashMap<>();
+        for (Category category : categories) {
+            List<Link> links = linksMap.get(category.id());
+            if (!links.isEmpty()) {
+                linksMapWithCategories.put(category, links);
+            }
+        }
+        return linksMapWithCategories;
+    }
+    public List<Link> getLinks(String blikiId) {
+        return jdbcTemplate.query("select * from links where bliki_id = ?",
                 linkRowMapper,
                 Long.parseLong(blikiId)
         );
     }
 
-    private List<Link> getLinksByCategoryId(String categoryId) {
-        return jdbc.query("select * from links where category_id = ?",
+    public List<Link> getLinksByCategoryId(String categoryId) {
+        return jdbcTemplate.query("select * from links where category_id = ?",
                 linkRowMapper,
                 Long.parseLong(categoryId)
         );
     }
 
-    private List<Category> getCategories() {
-        return jdbc.query("select * from categories", categoryRowMapper);
+    public List<Category> getCategories() {
+        return jdbcTemplate.query("select * from categories", categoryRowMapper);
     }
 
-    private Category getCategory(String id) {
-        return jdbc.queryForObject(
+    public Category getCategory(String id) {
+        return jdbcTemplate.queryForObject(
                 "select * from categories where id = ?",
                 categoryRowMapper,
                 Long.parseLong(id));
     }
 
-    private List<Bliki> getBlikis() {
-        return jdbc.query("select * from blikis", blikiRowMapper);
+    public List<Bliki> getBlikis() {
+        return jdbcTemplate.query("select * from blikis", blikiRowMapper);
     }
 
-    private List<Bliki> getListedBlikis() {
-        return jdbc.query("select * from blikis where listed = true", blikiRowMapper);
+    public List<Bliki> getListedBlikis() {
+        return jdbcTemplate.query("select * from blikis where listed = true", blikiRowMapper);
     }
 
-    private Bliki getBliki(String id) {
-        return jdbc.queryForObject(
+    public Bliki getBliki(String id) {
+        return jdbcTemplate.queryForObject(
                 "select * from blikis where id = ?",
                 blikiRowMapper,
                 Long.parseLong(id));
