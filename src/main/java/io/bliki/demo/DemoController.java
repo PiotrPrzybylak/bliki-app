@@ -114,10 +114,12 @@ public class DemoController {
 
     @PostMapping("/admin/delete_link")
     public String newLink(
-            @RequestParam("bliki") String blikiId,
-            @RequestParam("link_id") Integer linkId) {
-        jdbc.update("delete from links where id = ?", linkId);
-        return "redirect:/admin/new_link?blikiId=" + blikiId;
+            @RequestParam("bliki_id") String blikiId,
+            @RequestParam("link_id") Integer linkId,
+            HttpServletRequest request) {
+        User user = userDAO.byEmail(request.getRemoteUser());
+        jdbc.update("update links set deleted = true , deleted_by = ?::integer where id = ?", user.id(), linkId);
+        return "redirect:/admin/new_link?bliki_id=" + blikiId;
     }
 
     @PostMapping("/admin/categories")
@@ -165,14 +167,14 @@ public class DemoController {
     }
 
     private List<Link> getLinks(String blikiId) {
-        return jdbc.query("select l.id, href, text, l.rating, description, category_id, tags, language_id, AVG(r.rating) as community_rating from links l left join ratings r on l.id = r.link_id where bliki_id = ? group by l.id",
+        return jdbc.query("select l.id, href, text, l.rating, description, category_id, tags, language_id, AVG(r.rating) as community_rating from links l left join ratings r on l.id = r.link_id where bliki_id = ? and deleted = false group by l.id",
                 linkRowMapper,
                 Long.parseLong(blikiId)
         );
     }
 
     private List<Link> getLinksByCategoryId(String categoryId) {
-        return jdbc.query("select l.id, href, text, l.rating, description, category_id, tags, language_id, AVG(r.rating) as community_rating from links l left join ratings r on l.id = r.link_id where category_id = ? group by l.id",
+        return jdbc.query("select l.id, href, text, l.rating, description, category_id, tags, language_id, AVG(r.rating) as community_rating from links l left join ratings r on l.id = r.link_id where category_id = ? and deleted = false group by l.id",
                 linkRowMapper,
                 Long.parseLong(categoryId)
         );
