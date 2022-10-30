@@ -2,13 +2,13 @@ package io.bliki.demo;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.stereotype.Repository;
 
 import java.util.*;
 
+@Repository
 public class SQLConfig {
-    private final JdbcTemplate jdbcTemplate;
-
-//    private JdbcTemplate jdbc;
+    private final JdbcTemplate jdbc;
 
     private final RowMapper<Bliki> blikiRowMapper = (rs, i) ->
             new Bliki(
@@ -39,8 +39,8 @@ public class SQLConfig {
                     langs.getOrDefault(rs.getInt("language_id"), langs.get(1))
             );
 
-    public SQLConfig(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
+    public SQLConfig(JdbcTemplate jdbc) {
+        this.jdbc = jdbc;
     }
 
     public Map<Category, List<Link>> getLinksMapWithCategories(String blikiId) {
@@ -62,40 +62,40 @@ public class SQLConfig {
         return linksMapWithCategories;
     }
     public List<Link> getLinks(String blikiId) {
-        return jdbcTemplate.query("select * from links where bliki_id = ?",
+        return jdbc.query("select * from links where bliki_id = ?",
                 linkRowMapper,
                 Long.parseLong(blikiId)
         );
     }
 
     public List<Link> getLinksByCategoryId(String categoryId) {
-        return jdbcTemplate.query("select * from links where category_id = ?",
+        return jdbc.query("select * from links where category_id = ?",
                 linkRowMapper,
                 Long.parseLong(categoryId)
         );
     }
 
     public List<Category> getCategories() {
-        return jdbcTemplate.query("select * from categories", categoryRowMapper);
+        return jdbc.query("select * from categories", categoryRowMapper);
     }
 
     public Category getCategory(String id) {
-        return jdbcTemplate.queryForObject(
+        return jdbc.queryForObject(
                 "select * from categories where id = ?",
                 categoryRowMapper,
                 Long.parseLong(id));
     }
 
     public List<Bliki> getBlikis() {
-        return jdbcTemplate.query("select * from blikis", blikiRowMapper);
+        return jdbc.query("select * from blikis", blikiRowMapper);
     }
 
     public List<Bliki> getListedBlikis() {
-        return jdbcTemplate.query("select * from blikis where listed = true", blikiRowMapper);
+        return jdbc.query("select * from blikis where listed = true", blikiRowMapper);
     }
 
     public Bliki getBliki(String id) {
-        return jdbcTemplate.queryForObject(
+        return jdbc.queryForObject(
                 "select * from blikis where id = ?",
                 blikiRowMapper,
                 Long.parseLong(id));
