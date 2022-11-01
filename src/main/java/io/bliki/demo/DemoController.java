@@ -24,9 +24,8 @@ public class DemoController {
 
     @GetMapping("/")
     public String home(Model model) {
-        SQLConfig sqlConfig = new SQLConfig(jdbc);
-        model.addAttribute("blikis", sqlConfig.getListedBlikis());
-        model.addAttribute("categories", sqlConfig.getCategories());
+        model.addAttribute("blikis", sQLConfig.getListedBlikis());
+        model.addAttribute("categories", sQLConfig.getCategories());
 
         return "blikis";
     }
