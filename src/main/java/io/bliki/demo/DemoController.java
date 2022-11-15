@@ -75,9 +75,7 @@ public class DemoController {
             Long rate,
             HttpServletRequest request) {
         User user = userDAO.byEmail(request.getRemoteUser());
-        jdbc.update("insert into links" +
-                " (href, text, rating, description, category_id, bliki_id, user_id)" +
-                "VALUES (?,?,?,?,?::integer,?::integer, ?::integer )", href, text, rate, description, categoryId, blikiId, user.id());
+        sqlConfig.getJdbc();
         return "redirect:/admin/";
     }
 

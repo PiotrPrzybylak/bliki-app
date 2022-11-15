@@ -1,5 +1,7 @@
 package io.bliki.demo;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jdk.jshell.Snippet;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
@@ -101,5 +103,19 @@ import java.util.*;
                     "select * from blikis where id = ?",
                     blikiRowMapper,
                     Long.parseLong(id));
+        }
+
+        public int getJdbc() {
+            String href = null;
+            String text = null;
+            String categoryId = null;
+            String blikiId = null;
+            String description = null;
+            Long rate = null;
+            HttpServletRequest request;
+            Snippet user = null;
+            return jdbc.update("insert into links" +
+                    " (href, text, rating, description, category_id, bliki_id, user_id)" +
+                    "VALUES (?,?,?,?,?::integer,?::integer, ?::integer )", href, text, rate, description, categoryId, blikiId, user.id());
         }
     }
