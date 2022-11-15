@@ -20,28 +20,28 @@ public class DemoController {
 
     private final JdbcTemplate jdbc;
     private final UserDAO userDAO;
-    SQLConfig sqlConfig;
+    SQLDAO sQLDAO;
 
     @GetMapping("/")
     public String home(Model model) {
-        model.addAttribute("blikis", sqlConfig.getListedBlikis());
-        model.addAttribute("categories", sqlConfig.getCategories());
+        model.addAttribute("blikis", sQLDAO.getListedBlikis());
+        model.addAttribute("categories", sQLDAO.getCategories());
 
         return "blikis";
     }
 
     @GetMapping("/bliki/{id}")
     public String bliki(@PathVariable String id, Model model) {
-        model.addAttribute("bliki", sqlConfig.getBliki(id));
-        Map<Category, List<Link>> linksMapWithCategories = sqlConfig.getLinksMapWithCategories(id);
+        model.addAttribute("bliki", sQLDAO.getBliki(id));
+        Map<Category, List<Link>> linksMapWithCategories = sQLDAO.getLinksMapWithCategories(id);
         model.addAttribute("categories", linksMapWithCategories);
         return "bliki";
     }
 
     @GetMapping("/category/{id}")
     public String category(@PathVariable String id, Model model) {
-        model.addAttribute("category", sqlConfig.getCategory(id));
-        List<Link> links = sqlConfig.getLinksByCategoryId(id);
+        model.addAttribute("category", sQLDAO.getCategory(id));
+        List<Link> links = sQLDAO.getLinksByCategoryId(id);
         model.addAttribute("links", links);
         return "category";
     }
@@ -49,7 +49,7 @@ public class DemoController {
     @GetMapping("/admin/")
     public String adminBlikis(Model model, HttpServletRequest request) {
         model.addAttribute("user", request.getRemoteUser());
-        model.addAttribute("blikis", sqlConfig.getBlikis());
+        model.addAttribute("blikis", sQLDAO.getBlikis());
         return "admin_blikis";
     }
 
@@ -58,10 +58,10 @@ public class DemoController {
         User user = userDAO.byEmail(request.getRemoteUser());
 
         model.addAttribute("user", user);
-        model.addAttribute("bliki", sqlConfig.getBliki(blikiId));
-        model.addAttribute("categories", sqlConfig.getCategories());
-        model.addAttribute("links", sqlConfig.getLinks(blikiId));
-        model.addAttribute("categoriesMap", sqlConfig.getLinksMapWithCategories(blikiId));
+        model.addAttribute("bliki", sQLDAO.getBliki(blikiId));
+        model.addAttribute("categories", sQLDAO.getCategories());
+        model.addAttribute("links", sQLDAO.getLinks(blikiId));
+        model.addAttribute("categoriesMap", sQLDAO.getLinksMapWithCategories(blikiId));
         return "admin_new_link";
     }
 
@@ -75,7 +75,7 @@ public class DemoController {
             Long rate,
             HttpServletRequest request) {
         User user = userDAO.byEmail(request.getRemoteUser());
-        sqlConfig.getJdbc();
+        sQLDAO.getJdbc();
         return "redirect:/admin/";
     }
 

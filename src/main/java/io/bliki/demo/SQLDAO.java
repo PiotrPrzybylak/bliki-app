@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 import java.util.*;
 
     @Repository
-    public class SQLConfig {
+    public class SQLDAO {
         private final JdbcTemplate jdbc;
 
         private final RowMapper<Bliki> blikiRowMapper = (rs, i) ->
@@ -43,7 +43,7 @@ import java.util.*;
                         langs.getOrDefault(rs.getInt("language_id"), langs.get(1))
                 );
 
-        public SQLConfig(JdbcTemplate jdbc) {
+        public SQLDAO(JdbcTemplate jdbc) {
             this.jdbc = jdbc;
         }
 
