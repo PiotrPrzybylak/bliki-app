@@ -5,7 +5,6 @@ import io.bliki.user.UserDAO;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,58 +20,28 @@ public class DemoController {
 
     private final JdbcTemplate jdbc;
     private final UserDAO userDAO;
-    private final RowMapper<Bliki> blikiRowMapper = (rs, i) ->
-            new Bliki(
-                    rs.getString("id"),
-                    rs.getString("name"),
-                    rs.getString("description"));
-
-    private final RowMapper<Category> categoryRowMapper = (rs, i) ->
-            new Category(
-                    rs.getString("id"),
-                    rs.getString("name"),
-                    rs.getString("description"));
-
-    private final Map<Integer, Language> langs = Map.of(
-            1, new Language("", "English", "EN", "/gfx/lang_icons/usa.png"),
-            2, new Language("", "Polski", "PL", "/gfx/lang_icons/pol.png"),
-            3, new Language("", "Español", "ES", "/gfx/lang_icons/esp.png")
-    );
-
-    private final RowMapper<Link> linkRowMapper = (rs, i) ->
-            new Link(
-                    rs.getString("id"),
-                    rs.getString("href"),
-                    rs.getString("text"),
-                    rs.getInt("rating"),
-                    rs.getBigDecimal("community_rating"),
-                    rs.getString("description"),
-                    rs.getString("category_id"),
-                    rs.getString("tags"),
-                    langs.getOrDefault(rs.getInt("language_id"), langs.get(1))
-                    );
-
+    SQLConfig sqlConfig;
 
     @GetMapping("/")
     public String home(Model model) {
-        model.addAttribute("blikis", getListedBlikis());
-        model.addAttribute("categories", getCategories());
+        model.addAttribute("blikis", sqlConfig.getListedBlikis());
+        model.addAttribute("categories", sqlConfig.getCategories());
 
         return "blikis";
     }
 
     @GetMapping("/bliki/{id}")
     public String bliki(@PathVariable String id, Model model) {
-        model.addAttribute("bliki", getBliki(id));
-        Map<Category, List<Link>> linksMapWithCategories = getLinksMapWithCategories(id);
+        model.addAttribute("bliki", sqlConfig.getBliki(id));
+        Map<Category, List<Link>> linksMapWithCategories = sqlConfig.getLinksMapWithCategories(id);
         model.addAttribute("categories", linksMapWithCategories);
         return "bliki";
     }
 
     @GetMapping("/category/{id}")
     public String category(@PathVariable String id, Model model) {
-        model.addAttribute("category", getCategory(id));
-        List<Link> links = getLinksByCategoryId(id);
+        model.addAttribute("category", sqlConfig.getCategory(id));
+        List<Link> links = sqlConfig.getLinksByCategoryId(id);
         model.addAttribute("links", links);
         return "category";
     }
@@ -80,7 +49,7 @@ public class DemoController {
     @GetMapping("/admin/")
     public String adminBlikis(Model model, HttpServletRequest request) {
         model.addAttribute("user", request.getRemoteUser());
-        model.addAttribute("blikis", getBlikis());
+        model.addAttribute("blikis", sqlConfig.getBlikis());
         return "admin_blikis";
     }
 
@@ -89,10 +58,10 @@ public class DemoController {
         User user = userDAO.byEmail(request.getRemoteUser());
 
         model.addAttribute("user", user);
-        model.addAttribute("bliki", getBliki(blikiId));
-        model.addAttribute("categories", getCategories());
-        model.addAttribute("links", getLinks(blikiId));
-        model.addAttribute("categoriesMap", getLinksMapWithCategories(blikiId));
+        model.addAttribute("bliki", sqlConfig.getBliki(blikiId));
+        model.addAttribute("categories", sqlConfig.getCategories());
+        model.addAttribute("links", sqlConfig.getLinks(blikiId));
+        model.addAttribute("categoriesMap", sqlConfig.getLinksMapWithCategories(blikiId));
         return "admin_new_link";
     }
 
